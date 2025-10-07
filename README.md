@@ -6,8 +6,6 @@ Ce projet utilise un **PC "serveur"** équipé d’un **GPU** sous **Windows 11*
 - Le **client** utilise **PyCharm** pour le développement.  
 - Les deux machines sont reliées via **SSH** avec **Tailscale**, car elles ne sont pas sur le même réseau.
 
----
-
 ## ⚙️ Commandes utiles
 
 Vérifier la détection de CUDA et du GPU :
