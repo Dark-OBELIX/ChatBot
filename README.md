@@ -22,3 +22,19 @@ Surveiller l’utilisation du GPU:
 ```bash
 watch -n 1 gpustat -cp
 ```
+
+Lancer le script : dans le repo : 
+```bash
+run_remote_script main.py
+```
+
+ALias :
+```bash
+nano ~/.bashrc
+
+alias run_remote_script='f() { \
+  rsync -avz "/mnt/c/Users/hugol/OneDrive/Documents/0_Perso/0_2_Projets_perso/ChatBot/scripts/" sidiouslinux@100.88.42.33:~/projects/pytorch_projects/scrip>  ssh sidiouslinux@100.88.42.33 "cd ~/projects/pytorch_projects && ./run.sh scripts/$1"; \
+}; f'
+
+source ~/.bashrc
+```
