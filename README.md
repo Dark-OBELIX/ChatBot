@@ -28,7 +28,7 @@ Lancer le script : dans le repo :
 run_remote_script main.py
 ```
 
-ALias :
+Alias :
 ```bash
 nano ~/.bashrc
 
