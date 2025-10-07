@@ -1,5 +1,6 @@
-    # ========================
-# Chatbot minimal PyTorch + CUDA
+# main.py
+# ========================
+# Chatbot minimal PyTorch + CUDA avec action_index
 # ========================
 
 import torch
@@ -82,14 +83,18 @@ print("Entraînement terminé !")
 
 
 # -----------------------------
-# Étape 7 : Fonction de prédiction
+# Étape 7 : Fonction de prédiction avec action_index
 # -----------------------------
 def predict(question):
+    """
+    Retourne la réponse du chatbot ET l'action_index associé.
+    """
     vec = vectorizer.transform([question]).toarray()
     x = torch.tensor(vec, dtype=torch.float32).to(device)
     output = model(x)
     _, predicted = torch.max(output, 1)
-    return data[predicted.item()]["answer"]
+    answer_data = data[predicted.item()]
+    return answer_data["answer"], answer_data["action_index"]
 
 
 # -----------------------------
@@ -99,10 +104,10 @@ print("\nChatbot prêt ! Tape 'quit' pour quitter.")
 
 while True:
     user_input = input("Vous : ")
-    if user_input.lower() in ["quit", "exit"]:
-        print("Chatbot : À bientôt !")
+
+    response, action = predict(user_input)
+    print(f"Chatbot : {response} (action_index={action})")
+
+    if action == 1:
+        print("Action spéciale : fermeture du programme ou autre déclenchement")
         break
-    response = predict(user_input)
-
-    print(f"Chatbot : {response}")
-
