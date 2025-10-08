@@ -1,17 +1,6 @@
 # scripts/use_chatbot.py
 import torch
-import torch.nn as nn
 from scripts.data_chatbot import data
-
-class ChatBotNN(nn.Module):
-    def __init__(self, input_size, hidden_size, output_size):
-        super(ChatBotNN, self).__init__()
-        self.fc1 = nn.Linear(input_size, hidden_size)
-        self.relu = nn.ReLU()
-        self.fc2 = nn.Linear(hidden_size, output_size)
-
-    def forward(self, x):
-        return self.fc2(self.relu(self.fc1(x)))
 
 def use_model(model, vectorizer):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -21,10 +10,6 @@ def use_model(model, vectorizer):
 
     while True:
         user_input = input("Vous : ")
-        if user_input.lower() in ["quit", "exit", "stop"]:
-            print("👋 Fin de la conversation.")
-            break
-
         vec = vectorizer.transform([user_input]).toarray()
         x = torch.tensor(vec, dtype=torch.float32).to(device)
         output = model(x)

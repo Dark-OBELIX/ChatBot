@@ -2,28 +2,21 @@
 import os
 import torch
 import torch.nn as nn
-from sklearn.feature_extraction.text import CountVectorizer
-from scripts.data_chatbot import data  # import corrigé
+from sklearn.feature_extraction.text import TfidfVectorizer
+import joblib
+from scripts.data_chatbot import data
+from scripts.model import ChatBotNN
 
-# Dossier "models" au même niveau que "scripts"
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MODEL_DIR = os.path.join(BASE_DIR, "models")
-MODEL_PATH = os.path.join(MODEL_DIR, "chatbot_model.pth")
-
-class ChatBotNN(nn.Module):
-    def __init__(self, input_size, hidden_size, output_size):
-        super(ChatBotNN, self).__init__()
-        self.fc1 = nn.Linear(input_size, hidden_size)
-        self.relu = nn.ReLU()
-        self.fc2 = nn.Linear(hidden_size, output_size)
-
-    def forward(self, x):
-        return self.fc2(self.relu(self.fc1(x)))
+MODEL_PATH_MODEL = os.path.join(MODEL_DIR, "chatbot_model.pth")
+MODEL_PATH_VECTORIZER = os.path.join(MODEL_DIR, "vectorizer.pkl")
 
 def train_model():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    print(f"🧠 Entraînement sur : {device}")
+    print(f"Entraînement sur : {device}")
 
+    # Préparer corpus et labels
     corpus, y = [], []
     for i, entry in enumerate(data):
         questions = entry["question"]
@@ -34,7 +27,8 @@ def train_model():
             corpus.append(questions)
             y.append(i)
 
-    vectorizer = CountVectorizer()
+    # Vectorizer TF-IDF
+    vectorizer = TfidfVectorizer()
     X = vectorizer.fit_transform(corpus).toarray()
 
     input_size = X.shape[1]
@@ -59,13 +53,12 @@ def train_model():
         if (epoch + 1) % 100 == 0:
             print(f"Epoch [{epoch + 1}/{num_epochs}], Loss: {loss.item():.4f}")
 
-    # Sauvegarde du modèle
+    # Sauvegarde
     os.makedirs(MODEL_DIR, exist_ok=True)
-    torch.save({
-        "model_state": model.state_dict(),
-        "vectorizer": vectorizer
-    }, MODEL_PATH)
+    torch.save(model.state_dict(), MODEL_PATH_MODEL)
+    joblib.dump(vectorizer, MODEL_PATH_VECTORIZER)
 
-    print(f"✅ Modèle sauvegardé dans : {MODEL_PATH}")
+    print(f"Modèle sauvegardé dans : {MODEL_PATH_MODEL}")
+    print(f"Vectorizer sauvegardé dans : {MODEL_PATH_VECTORIZER}")
 
     return model, vectorizer
