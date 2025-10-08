@@ -26,7 +26,7 @@ def main():
         input_size = len(vectorizer.get_feature_names_out())
         output_size = len(data)
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        model = ChatBotNN(input_size, 8, output_size).to(device)
+        model = ChatBotNN(input_size, 16, output_size).to(device)
         model.load_state_dict(torch.load(MODEL_PATH_MODEL, map_location=device))
 
     use_model(model, vectorizer)

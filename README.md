@@ -30,6 +30,8 @@ run_remote_script main.py
 
 Alias :
 ```bash
+ssh sidiouslinux@100.88.42.33
+
 nano ~/.bashrc
 
 alias run_remote_script='f() { \
