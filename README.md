@@ -27,6 +27,10 @@ Lancer le script : dans le repo :
 ```bash
 run_remote_script main.py
 ```
+Activer l'env :
+```bash
+source ~/pytorch_env/bin/activate
+```
 
 Alias :
 ```bash
