@@ -26,7 +26,7 @@ DROPOUT_RATE = 0.4            # Forte régularisation pour éviter l’overfit m
 
 SHOW_PROBABILITIES = False    # True = debug complet
 ASK_FEEDBACK = False
-CONFIDENCE_THRESHOLD = 0.9    # Confiance minimale requise pour répondre
+CONFIDENCE_THRESHOLD = 0.95   # Confiance minimale requise pour répondre
 
 # ==============================
 # 📊 MONITORING & AMÉLIORATION
