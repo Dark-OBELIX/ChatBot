@@ -1,0 +1,7 @@
+torch
+scikit-learn
+matplotlib
+tqdm
+joblib
+spacy
+python -m spacy download fr_core_news_sm

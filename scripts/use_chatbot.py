@@ -1,6 +1,6 @@
-# scripts/use_chatbot.py
 import torch
 from scripts.data_chatbot import data
+from scripts.train_chatbot import clean_and_lemmatize
 
 def use_model(model, vectorizer):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -9,8 +9,12 @@ def use_model(model, vectorizer):
     print("\n🤖 Chatbot prêt !")
 
     while True:
-        user_input = input("Vous : ")
-        vec = vectorizer.transform([user_input]).toarray()
+        user_input = input("Vous : ").strip()
+        if not user_input:
+            continue
+
+        text = clean_and_lemmatize(user_input)
+        vec = vectorizer.transform([text]).toarray()
         x = torch.tensor(vec, dtype=torch.float32).to(device)
         output = model(x)
         probs = torch.softmax(output, dim=1).detach().cpu().numpy().flatten()
@@ -22,8 +26,8 @@ def use_model(model, vectorizer):
         for i, p in enumerate(probs):
             print(f"{i}: {data[i]['answer']} -> {p*100:.2f}%")
 
-        if confidence < 0.9:
-            print("Chatbot : Je ne comprends pas 🤔")
+        if confidence < 0.75:
+            print("Chatbot : Je ne comprends pas, veuillez etre plus claire dans votre demande !")
             continue
 
         answer = data[predicted_index]["answer"]
